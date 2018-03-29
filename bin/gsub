@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+var cp = require('child_process');
+
+var inquirer = require('inquirer');
+
+var questions = [
+    {
+        type: 'list',
+        name: 'commitType',
+        message: '请选择提交类型',
+        choices: [
+            { value: 'feat', name: 'feat [新功能]'},
+            { value: 'fix', name: 'fix [修补bug]'},
+            { value: 'docs', name: 'docs [文档]'},
+            { value: 'style', name: 'style [格式（不影响代码运行的变动）]'},
+            { value: 'refactor', name: 'refactor [重构（即不是新增功能，也不是修改bug的代码变动）]'},
+            { value: 'test', name: 'test [增加测试]'},
+            { value: 'chore', name: 'chore [构建过程或辅助工具的变动]'}
+        ]
+    },
+    {
+        type: 'input',
+        name: 'commitText',
+        message: '请输入提交信息',
+    },
+    {
+        type: 'confirm',
+        name: 'canPush',
+        message: '是否 push 到远程仓库',
+        default: false
+    }
+]
+
+inquirer.prompt(questions).then(answers => {
+    const {commitType, commitText, canPush} = answers;
+
+    console.log();
+    console.log(`commit info: '${commitType}: ${commitText}'`);
+    console.log();
+    
+    cp.execSync('git add .');
+    cp.execSync(`git commit -m '${commitType}: ${commitText}'`);
+    
+    if(canPush) {
+        cp.execSync('git push');
+    }
+});
