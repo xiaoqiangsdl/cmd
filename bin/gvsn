@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const cp = require('child_process');
+const fs= require("fs");
 
 const inquirer = require('inquirer');
 
@@ -27,20 +28,22 @@ inquirer.prompt(questions).then(answers => {
     const {versionType, canPush} = answers;
 
     const projectPath = process.cwd();
-    const packageJson = require(projectPath + '/package.json');
-    let version = packageJson.version;
-    let versionArr = version.split('.');
+    const packageJsonPath = projectPath + '/package.json';
+    const packageJson = require(packageJsonPath);
+    const versionArr = packageJson.version.split('.');
 
     versionArr[versionType] = parseInt(versionArr[versionType]) + 1;
    
-    version = versionArr.join('.');
+    packageJson.version = versionArr.join('.');
+    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 4));
 
     console.log();
-    console.log(`commit info: 'chore(package.json): bump version to ${version}'`);
+    console.log(`commit info: 'chore(package.json): bump version to ${packageJson.version}'`);
     console.log();
     
-    cp.execSync('git add .');
-    cp.execSync(`git commit -m 'chore(package.json): bump version to ${versionType}'`);
+    // TODO: rebase 一下 commit 历史
+    cp.execSync(`git add ${packageJsonPath}`);
+    cp.execSync(`git commit -m 'chore(package.json): bump version to ${packageJson.version}'`);
     
     if(canPush) {
         cp.execSync('git push');
