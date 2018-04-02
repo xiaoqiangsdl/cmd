@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+const cp = require('child_process');
+
+const inquirer = require('inquirer');
+
+const questions = [
+    {
+        type: 'list',
+        name: 'versionType',
+        message: '请选择升级类型',
+        choices: [
+            { value: '2', name: '修复 Bug'},
+            { value: '1', name: '增删功能'},
+            { value: '0', name: '重大更新'}
+        ]
+    },
+    {
+        type: 'confirm',
+        name: 'canPush',
+        message: '是否 push 到远程仓库',
+        default: false
+    }
+]
+
+inquirer.prompt(questions).then(answers => {
+    const {versionType, canPush} = answers;
+
+    const projectPath = process.cwd();
+    const packageJson = require(projectPath + '/package.json');
+    let version = packageJson.version;
+    let versionArr = version.split('.');
+
+    versionArr[versionType] = parseInt(versionArr[versionType]) + 1;
+   
+    version = versionArr.join('.');
+
+    console.log();
+    console.log(`commit info: 'chore(package.json): bump version to ${version}'`);
+    console.log();
+    
+    cp.execSync('git add .');
+    cp.execSync(`git commit -m 'chore(package.json): bump version to ${versionType}'`);
+    
+    if(canPush) {
+        cp.execSync('git push');
+    }
+});
