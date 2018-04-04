@@ -11,9 +11,9 @@ const questions = [
         name: 'versionType',
         message: '请选择升级类型',
         choices: [
-            { value: '2', name: '修复 Bug'},
-            { value: '1', name: '增删功能'},
-            { value: '0', name: '重大更新'}
+            { value: 2, name: '修复 Bug'},
+            { value: 1, name: '增删功能'},
+            { value: 0, name: '重大更新'}
         ]
     },
     {
@@ -25,7 +25,7 @@ const questions = [
 ]
 
 inquirer.prompt(questions).then(answers => {
-    const {versionType, canPush} = answers;
+    let {versionType, canPush} = answers;
 
     const projectPath = process.cwd();
     const packageJsonPath = projectPath + '/package.json';
@@ -33,6 +33,10 @@ inquirer.prompt(questions).then(answers => {
     const versionArr = packageJson.version.split('.');
 
     versionArr[versionType] = parseInt(versionArr[versionType]) + 1;
+    while (versionType < 2) {
+        versionType++;
+        versionArr[versionType] = 0;
+    }
    
     packageJson.version = versionArr.join('.');
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 4));
