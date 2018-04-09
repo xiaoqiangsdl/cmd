@@ -1,0 +1,41 @@
+#!/usr/bin/env node
+
+var cp = require('child_process');
+
+var inquirer = require('inquirer');
+
+var questions = [
+    // {
+    //     type: 'confirm',
+    //     name: 'canChange',
+    //     message: '是否修改本仓库 git 信息',
+    //     default: true
+    // },
+    {
+        type: 'input',
+        name: 'userName',
+        message: '请输入 user.name'
+    },
+    {
+        type: 'input',
+        name: 'userEmail',
+        message: '请输入 user.email'
+    }
+];
+
+
+var userName = cp.execSync('git config --local user.name').toString().trim();
+var userEmail = cp.execSync('git config --local user.email').toString().trim();
+
+console.log('当前配置信息为：');
+console.log(`user.name = ${userName}`);
+console.log(`user.email = ${userEmail}`);
+console.log('');
+
+inquirer.prompt(questions).then(answers => {
+    const {userName, userEmail} = answers;
+
+    cp.execSync(`git config --local user.name '${userName}'`);
+    cp.execSync(`git config --local user.email '${userEmail}'`);
+    console.log('配置成功！');
+});
