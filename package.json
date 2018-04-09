@@ -8,7 +8,8 @@
     },
     "bin": {
         "gsub": "bin/gsub",
-        "gvsn": "bin/gvsn"
+        "gvsn": "bin/gvsn",
+        "gcfg": "bin/gcfg"
     },
     "repository": {
         "type": "git",
