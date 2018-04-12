@@ -39,7 +39,7 @@ inquirer.prompt(questions).then(answers => {
     }
    
     packageJson.version = versionArr.join('.');
-    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 4));
+    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
     console.log();
     console.log(`commit info: 'chore(package.json): bump version to ${packageJson.version}'`);
