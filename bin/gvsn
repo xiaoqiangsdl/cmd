@@ -19,10 +19,10 @@ const questions = [
     {
         type: 'confirm',
         name: 'canPush',
-        message: '是否 push 到远程仓库',
-        default: false
+        message: '是否 push 到远程仓库（自动打 tag）',
+        default: true
     }
-]
+];
 
 inquirer.prompt(questions).then(answers => {
     let {versionType, canPush} = answers;
@@ -51,5 +51,7 @@ inquirer.prompt(questions).then(answers => {
     
     if(canPush) {
         cp.execSync('git push');
+        cp.execSync(`git tag ${packageJson.version}`);
+        cp.execSync('git push origin --tags');
     }
 });
