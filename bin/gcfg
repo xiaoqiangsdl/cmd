@@ -24,8 +24,8 @@ var questions = [
 ];
 
 
-var userName = cp.execSync('git config --local user.name').toString().trim();
-var userEmail = cp.execSync('git config --local user.email').toString().trim();
+var userName = cp.execSync('git config user.name').toString().trim();
+var userEmail = cp.execSync('git config user.email').toString().trim();
 
 console.log('当前配置信息为：');
 console.log(`user.name = ${userName}`);
