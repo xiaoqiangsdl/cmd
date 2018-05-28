@@ -51,7 +51,7 @@ inquirer.prompt(questions).then(answers => {
     
     if(canPush) {
         cp.execSync('git push');
-        cp.execSync(`git tag ${packageJson.version}`);
+        cp.execSync(`git tag v${packageJson.version}`);
         cp.execSync('git push origin --tags');
     }
 });
